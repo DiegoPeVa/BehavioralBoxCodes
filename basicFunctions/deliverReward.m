@@ -15,6 +15,10 @@ function [totalSteps,exactRewardValue] = deliverReward (volume_uL, syringeSize_m
 % velocity of the motor which we don't have any reliable way to measure and since it happens at the end of each trial, we decided that we don't need the exact end time of reward)
 % 
 
+
+
+
+
 if (syringeSize_mL == 5) 
     diameter_mm = 12.06; %in mm
 elseif (syringeSize_mL == 10)
@@ -23,6 +27,20 @@ else
     print("didn't recognize a valid syringe size. available sizes '5' or '10.'"); 
     return; 
 end
+
+
+
+
+
+
+
+
+
+
+% test changes in github
+
+
+
 
 % // determine vol per revolution, area of small cylinder with h=0.8mm
 %   // 0.8mm length per thread. 1thread=1cycle. 1 like=1prayer.
