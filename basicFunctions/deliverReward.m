@@ -15,6 +15,10 @@ function [totalSteps,exactRewardValue] = deliverReward (volume_uL, syringeSize_m
 % velocity of the motor which we don't have any reliable way to measure and since it happens at the end of each trial, we decided that we don't need the exact end time of reward)
 % 
 
+
+
+
+
 if (syringeSize_mL == 5) 
     diameter_mm = 12.06; %in mm
 elseif (syringeSize_mL == 10)
