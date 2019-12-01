@@ -10,7 +10,7 @@ Screen('Preference', 'SkipSyncTests', 1);
 % Correct trials will be rewarded additionally doubling the amount of reward obtained for each correct trial.
 
 mfilename('fullpath')
-baseDirectory = 'Z:\recordedData\Behavioral\Diego';
+baseDirectory = 'Y:\recordedData\Behavioral\Diego';
 
 if ~exist(baseDirectory, 'dir')
       baseDirectory = 'C:\recordedData\Behavioral\Diego'; 
@@ -85,31 +85,39 @@ mkdir(baseDirectory,dataFolderName);
 dataFolderAdd = string(baseDirectory) + '\' + dataFolderName;
 
 
-niDevName = 'Dev2';
+niDevName = 'Dev1';
 %Initialization of the required daq card sessions
 
 %Analog input session for recording the following signals:
 signalsRecordingSession = daq.createSession('ni');  
 %1- output of the right lick sensor AI1
-%2- copy of the step motor command AI2
-%3- output strobe from the camera AI3
-%4- trial tags (sent through the daq card)
+%2- copy of the right step motor command AI2
+%3- output to the speaker AI3
+%4- trial tags (sent through the daq card) AI5
 %5- photodiode signal (sensed on the screens) AI0
-%6- output of the left lick sensor AI4
-%7- output of the center lick sensor AI5
-%8- copy of the lever output AI6
-%9- copy of the command to the pumpie 2! AI7
-%10- copy of the sound sent to the speaker AI15
+%6- copy of the sound sent to the speaker AI4
+%7- copy of the left lick sensor AI6
+%8- copy of the left step motor command AI7
+
+addAnalogInputChannel(signalsRecordingSession,niDevName,0,'Voltage');
 addAnalogInputChannel(signalsRecordingSession,niDevName,1,'Voltage');
 addAnalogInputChannel(signalsRecordingSession,niDevName,2,'Voltage');
 addAnalogInputChannel(signalsRecordingSession,niDevName,3,'Voltage');
-addAnalogInputChannel(signalsRecordingSession,niDevName,0,'Voltage');
 addAnalogInputChannel(signalsRecordingSession,niDevName,4,'Voltage');
-% addAnalogInputChannel(signalsRecordingSession,niDevName,5,'Voltage');
-% addAnalogInputChannel(signalsRecordingSession,niDevName,6,'Voltage');
+addAnalogInputChannel(signalsRecordingSession,niDevName,5,'Voltage');
+addAnalogInputChannel(signalsRecordingSession,niDevName,6,'Voltage');
 addAnalogInputChannel(signalsRecordingSession,niDevName,7,'Voltage');
+% addAnalogInputChannel(signalsRecordingSession,niDevName,6,'Voltage');
+% addAnalogInputChannel(signalsRecordingSession,niDevName,7,'Voltage');
 % addAnalogInputChannel(signalsRecordingSession,niDevName,15,'Voltage');
 
+%Digital output session for tagging the trials
+trialDigitalTagSession = daq.createSession('ni');
+%1 - digital tag sent before the stim onset
+stimTagPortLine = 'port0/line2';
+addDigitalChannel(trialDigitalTagSession,niDevName,stimTagPortLine,'OutputOnly');
+
+trialDigitalTagSession.outputSingleScan(0);
 
 % Digital input session for monitoring the spout
 spoutSession = daq.createSession('ni');
@@ -119,7 +127,7 @@ sensorCopyPortLine1 = 'port0/line1';
 addDigitalChannel(spoutSession,niDevName,sensorCopyPortLine1,'InputOnly');
 
 %left spout sensor
-sensorCopyPortLine2 = 'port0/line2';
+sensorCopyPortLine2 = 'port0/line3';
 addDigitalChannel(spoutSession,niDevName,sensorCopyPortLine2,'InputOnly');
 %p0/line0: a copy of the lick sensor output for the task managment
 
@@ -137,7 +145,7 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 
 %Digital Output session for left reward control
 rewardStepMotorCtl2 = daq.createSession('ni');
-rewardPortLine2 = 'port0/line3';
+rewardPortLine2 = 'port0/line4';
 %1 - output to step motor to control the reward
 rewardStepMotorCtl2.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
     
@@ -156,7 +164,7 @@ end
 
 
 %Configuring the session for recording analog inputs
-signalsRecordingSession.Rate = 10e3;
+signalsRecordingSession.Rate = 3e3;
 for chNo=1:size(signalsRecordingSession.Channels,2)
     signalsRecordingSession.Channels(1,chNo).TerminalConfig = 'SingleEnded';
 end
@@ -229,23 +237,21 @@ Priority(topPriorityLevel);
 %ot send the change stim signal before downsampling anything
 % patchRect = [(scrWidthPix - (scrWidthPix/25)) 0 scrWidthPix (scrHeightPix/15)];
 % patchRect = [(scrWidthPix*2/3 - (scrWidthPix/3/25)) 0 scrWidthPix*2/3 (scrHeightPix/15)];
-patchRect = [0 0 (scrWidthPix/15) (scrHeightPix/25)];
+patchRect = [scrWidthPix-(scrWidthPix/10) 0 (scrWidthPix) (scrHeightPix/6)];
 
 
 %--------------------
 % Gabor information
 %--------------------
 
-%Asus Screen Size: width (20.9235 inches, 53.1456 cm) height (11.7694
-%inches, 29.8944 cm), pixel density: 91.76 pixels/inch
-pixelDensityCM = 36.127; %pixels/cm
+pixelDensityCM = (1280+720)/(15.41+9.05); %pixels/cm, this is approximate because the pixel density don't match for width and height
 
 % Dimension of the region where will draw the Gabor in pixels
 % Dimension of the region where will draw the Gabor in pixels
-gaborDimCM_Height = 40; 
+gaborDimCM_Height = 9.5; 
 gaborDimPixHeight = floor(gaborDimCM_Height*pixelDensityCM); %windowRect(4) / 2;
 
-gaborDimCM_Width = 30; 
+gaborDimCM_Width = 14; 
 gaborDimPixWidth = floor(gaborDimCM_Width*pixelDensityCM); %windowRect(4) / 2;
 
 % Sigma of Gaussian
@@ -269,7 +275,7 @@ waitframes = 1;
 
 % Spatial Frequency (Cycles Per Pixel)
 % One Cycle = Grey-Black-Grey-White-Grey i.e. One Black and One White Lobe
-spatialFrequency = 0.2; %cycles/cm
+spatialFrequency = 0.3; %cycles/cm
 
 %freq = numCycles / gaborDimPix;
 freq = spatialFrequency / pixelDensityCM; %cycles/pixel
@@ -304,23 +310,23 @@ Screen('Flip', window);
 
 
 %Stoping the code until the camera recording started
-if cameraRecordingEnable
-    cameraRecordingStartDialogMirrorScreens;
-end
+% if cameraRecordingEnable
+%     cameraRecordingStartDialogMirrorScreens;
+% end
 
-
-Screen('FillRect', window, gray);
-Screen('FillRect',window, black, patchRect);
-Screen('Flip', window);
+% 
+% Screen('FillRect', window, gray);
+% Screen('FillRect',window, black, patchRect);
+% Screen('Flip', window);
 
 %start the recording of signals
 signalsRecordingSession.startBackground();
 disp('Start recording...')
 
 %Stoping the code until the camera trigger is disabled manually
-if cameraRecordingEnable
-    cameraTriggerDisableDialogMirrorScreens;
-end
+% if cameraRecordingEnable
+%     cameraTriggerDisableDialogMirrorScreens;
+% end
 
 Screen('FillRect', window, gray);
 Screen('FillRect',window, black, patchRect);
@@ -329,7 +335,7 @@ Screen('Flip', window);
 %--------------------------------------------------------------------------
 
 % Stimulus Parameters
-heightOffsetInCM = 53 - gaborDimCM_Height;
+heightOffsetInCM = 0;
 heightOffset = floor(heightOffsetInCM*pixelDensityCM);
 widthOffset = 0;
  
