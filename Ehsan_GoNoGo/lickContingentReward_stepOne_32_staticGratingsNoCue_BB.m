@@ -22,13 +22,18 @@ end
     
 % entering the mouse Numbers, session duration and the session number of 
 % the day  
-prompt = {'Enter the mouse number:','Enter the Trial Numbers','Enter the day session number:'}; 
+prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the trial numbers:','Enter reinforcement trial numbers:'}; 
 titleBox = 'Input';
 dims = [1 35]; 
 dialogBoxInputs = inputdlg(prompt,titleBox,dims);
+
 mouseNumber = dialogBoxInputs{1};
-totalTrialNo = str2num(dialogBoxInputs{2});
-sessionNumber = dialogBoxInputs{3}; 
+boxNumber = dialogBoxInputs{2};
+sessionNumber = dialogBoxInputs{3};
+totalTrialNo = str2num(dialogBoxInputs{4});
+freeRewardTrials = str2num(dialogBoxInputs{5});
+ 
+
 
  
 % data folder name
@@ -417,7 +422,7 @@ previousTrialOrientation = ~currentTrialOrientation;
 goProb = 0.5; 
 noLickDurBeforeStim = 2; % in sec
 
-freeRewardTrials = 10;
+
 
 
 for trialNo=1:totalTrialNo
@@ -443,6 +448,9 @@ for trialNo=1:totalTrialNo
             end
             freeRewardTime = GetSecs;
             rewardCounter = rewardCounter + 1;
+            
+             disp(['free reward ']);
+             disp([' ']);
             
             consecutiveNoRewardCounter = 0;
             
