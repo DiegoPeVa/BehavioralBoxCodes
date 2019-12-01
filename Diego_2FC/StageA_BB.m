@@ -158,13 +158,13 @@ syringeVol = 5;
 cameraRecordingEnable = 1;
 
 %Stoping the code until the camera recording started
-if cameraRecordingEnable
-    cameraRecordingStartDialogMirrorScreens;
-end
+% if cameraRecordingEnable
+%     cameraRecordingStartDialogMirrorScreens;
+% end
 
 
 %Configuring the session for recording analog inputs
-signalsRecordingSession.Rate = 3e3;
+signalsRecordingSession.Rate = 2.5e3;
 for chNo=1:size(signalsRecordingSession.Channels,2)
     signalsRecordingSession.Channels(1,chNo).TerminalConfig = 'SingleEnded';
 end
@@ -198,11 +198,11 @@ screens = Screen('Screens');
 % selecting the screen for the stimulus presentation: mirroring two
 % identical screens show them with one number here.
 screenNumber = 2;%max(screens);%
-
+q
 window = Screen('OpenWindow', screenNumber);
-
-load C:\Users\Stimulation\Documents\MatlabScripts\AsusGammaTable23April2019SophiePhotometer
-Screen('LoadNormalizedGammaTable', window, gammaTable*[1 1 1]);
+% 
+% load C:\Users\Stimulation\Documents\MatlabScripts\AsusGammaTable23April2019SophiePhotometer
+% Screen('LoadNormalizedGammaTable', window, gammaTable*[1 1 1]);
 
 
 % Define black and white (white will be 1 and black 0). This is because
@@ -733,9 +733,9 @@ sessionEndTime = now;
 
 
 % notification to the experimenter to enable trigger in camera setting to stop frame recording 
-if cameraRecordingEnable
-    cameraTriggerEnableDialogMirrorScreens;
-end
+% if cameraRecordingEnable
+%     cameraTriggerEnableDialogMirrorScreens;
+% end
 
 
 %Stop the recording
