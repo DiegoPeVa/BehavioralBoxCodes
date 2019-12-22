@@ -88,13 +88,13 @@ rewardPortLine1 = 'port0/line0';
 rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 
 % %Digital Output session for left reward control
-% rewardStepMotorCtl2 = daq.createSession('ni');
-% rewardPortLine2 = 'port0/line3';
+% rewardStepMotorCtl1 = daq.createSession('ni');
+% rewardPortLine2 = 'port0/line4';
 % %1 - output to step motor to control the reward
-% rewardStepMotorCtl2.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
+% rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
     
 % Reward Volume:
-earnedRewardVol = 4; %in microL
+earnedRewardVol = 6; %in microL
 freeRewardVol = 4;
 syringeVol = 5;
 
@@ -322,7 +322,7 @@ soundOutputSession.Rate = samplingFreq;
 %--------------------------------------------------------------------------
 
 deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
-% deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl2);
+% deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
 
 % Stimulus Parameters
 heightOffsetInCM = 0;

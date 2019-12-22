@@ -22,13 +22,18 @@ end
     
 % entering the mouse Numbers, session duration and the session number of 
 % the day  
-prompt = {'Enter the mouse number:','Enter the Trial Numbers','Enter the day session number:'}; 
+prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the trial numbers:','Enter reinforcement trial numbers:'}; 
 titleBox = 'Input';
 dims = [1 35]; 
 dialogBoxInputs = inputdlg(prompt,titleBox,dims);
+
 mouseNumber = dialogBoxInputs{1};
-totalTrialNo = str2num(dialogBoxInputs{2});
-sessionNumber = dialogBoxInputs{3}; 
+boxNumber = dialogBoxInputs{2};
+sessionNumber = dialogBoxInputs{3};
+totalTrialNo = str2num(dialogBoxInputs{4});
+freeRewardTrials = str2num(dialogBoxInputs{5});
+ 
+
 
  
 % data folder name
@@ -89,7 +94,7 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 % rewardStepMotorCtl2.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
     
 % Reward Volume:
-earnedRewardVol = 4; %in microL
+earnedRewardVol = 6; %in microL
 freeRewardVol = 4;
 syringeVol = 5;
 
@@ -417,7 +422,7 @@ previousTrialOrientation = ~currentTrialOrientation;
 goProb = 0.5; 
 noLickDurBeforeStim = 2; % in sec
 
-freeRewardTrials = 10;
+
 
 
 for trialNo=1:totalTrialNo
@@ -443,6 +448,9 @@ for trialNo=1:totalTrialNo
             end
             freeRewardTime = GetSecs;
             rewardCounter = rewardCounter + 1;
+            
+             disp(['free reward ']);
+             disp([' ']);
             
             consecutiveNoRewardCounter = 0;
             
@@ -526,7 +534,7 @@ for trialNo=1:totalTrialNo
     
     while (1)
         scanStartTime = GetSecs;
-        [lickFlag, relDetectionTime] = detectLickOnRight(noLickDurBeforeStim, spoutSession);
+        [lickFlag, relDetectionTime] = detectLickOnLeft(noLickDurBeforeStim, spoutSession);
         if ~lickFlag
             cuePresTime = scanStartTime + relDetectionTime;
             break;
@@ -583,7 +591,7 @@ for trialNo=1:totalTrialNo
         
         
         initTime = GetSecs();
-        [lickFlag, relDetectionTime] = detectLickOnRight(preferredStimDuration, spoutSession);
+        [lickFlag, relDetectionTime] = detectLickOnLeft(preferredStimDuration, spoutSession);
         lickDetectionTime = relDetectionTime + initTime;
         
 
@@ -611,6 +619,7 @@ for trialNo=1:totalTrialNo
             disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
             
             vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
+            trialDigitalTagSession.outputSingleScan(0);
             
             while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
                 ;
@@ -665,7 +674,7 @@ for trialNo=1:totalTrialNo
       
       
         initTime = GetSecs();
-        [lickFlag, relDetectionTime] = detectLickOnRight(nonPreferredStimDuration, spoutSession);
+        [lickFlag, relDetectionTime] = detectLickOnLeft(nonPreferredStimDuration, spoutSession);
         lickDetectionTime = relDetectionTime + initTime;
         
 

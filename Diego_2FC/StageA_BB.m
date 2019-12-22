@@ -198,7 +198,7 @@ screens = Screen('Screens');
 % selecting the screen for the stimulus presentation: mirroring two
 % identical screens show them with one number here.
 screenNumber = 2;%max(screens);%
-q
+
 window = Screen('OpenWindow', screenNumber);
 % 
 % load C:\Users\Stimulation\Documents\MatlabScripts\AsusGammaTable23April2019SophiePhotometer
