@@ -298,8 +298,8 @@ tPunishment = 0:1/samplingFreq:punishmentSoundDur;
 cueSoundDur = 0.2;
 cueSoundDurFrames = round(cueSoundDur/ifi);
 % samplingFreq = 100e3;
-cueSoundFreq = 3400;
-cueSoundAmp = 1;
+cueSoundFreq = 2400;
+cueSoundAmp = 0.2;
       
 tCue = 0:1/samplingFreq:cueSoundDur;
 cueSoundToNICard = cueSoundAmp*sin(2*pi*cueSoundFreq*tCue);
