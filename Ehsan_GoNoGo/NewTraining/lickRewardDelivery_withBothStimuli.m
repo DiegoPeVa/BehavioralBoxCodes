@@ -89,7 +89,7 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 % rewardStepMotorCtl2.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
     
 % Reward Volume:
-earnedRewardVol = 4; %in microL
+earnedRewardVol = 6; %in microL
 freeRewardVol = 4;
 syringeVol = 5;
 
