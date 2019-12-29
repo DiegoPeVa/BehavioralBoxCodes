@@ -522,6 +522,8 @@ for trialNo=1:totalTrialNo
     while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
                 ;
     end
+    
+    disp(' ');
             
             
 end
