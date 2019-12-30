@@ -5,8 +5,8 @@ close all
 Screen('Preference', 'SkipSyncTests', 1);
 
 % Go-NoGo discrimination task, 
-% step0: whenever animal licks the spuot Go-stim is presented and reward is
-% dlivered
+% step1: during go stim presentation whenever the animal licks he gets the
+% reward
  
      
   
@@ -345,13 +345,13 @@ righImageHorzPos = [0,0,gaborDimPixWidth,0];
 
 
   
-preferredStimDuration = 2; %in sec
+preferredStimDuration = 4; %in sec
 preferredStimFrames = round(preferredStimDuration/ifi);
 
 nonPreferredStimDuration = 2;
 nonPreferredStimFrames = round(nonPreferredStimDuration/ifi);
 
-afterStimGrayTime = 4;
+afterStimGrayTime = 6;
 afterStimGrayFrames = round(afterStimGrayTime/ifi);
 
 afterStimExtendedGrayTime = 4;
@@ -469,51 +469,76 @@ for trialNo=1:totalTrialNo
     
     Screen('DrawTextures', window, gabortex, [], righImageHorzPos+stimHeightOffset, orientationPreferred, [], [], [], [],...
     kPsychDontDoRotation, propertiesMat');
-% 
-%         Screen('DrawTextures', window, gabortex, [], righMirrorImageHorzPos+stimHeightOffset, orientationPreferred, [], [], [], [],...
-%             kPsychDontDoRotation, propertiesMat');
-    trialDigitalTagSession.outputSingleScan(1);
+
 
     
-    while (1) % detect the lick and go for the stim pres and reward delivery
-        scanStartTime = GetSecs;
-        [lickFlag, relDetectionTime] = detectLickOnRight(noLickDurBeforeStim, spoutSession);
-        if lickFlag
-            cuePresTime = scanStartTime + relDetectionTime;
-            break;
-        end
-    end
         
 % this is the preferred stimulus
-   [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, cuePresTime + (1 - 0.5) * ifi);
+   [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, (1 - 0.5) * ifi);
         
 
-    while((GetSecs()-vblStim)<stimRewardDelay)
-        ;
-    end
+    initTime = GetSecs();
+    [lickFlag, relDetectionTime] = detectLickOnRight(preferredStimDuration, spoutSession);
+    lickDetectionTime = relDetectionTime + initTime;
 
-    if mod(rewardCounter,10) == 0
-        earnedRewardVol = earnedRewardVol*rewardCompRate;
-    end
-    deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
-    earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
-    if mod(rewardCounter,10) == 0
-        earnedRewardVol = earnedRewardVol/rewardCompRate;
-    end
 
-    rewardCounter = rewardCounter + 1;
-    
-    disp(['lick-reward: ', num2str(rewardCounter)]);
-    disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
-    
+
     Screen('FillRect', window, gray);
     Screen('FillRect',window, black, patchRect);
-    
-    vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
-    
-    while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
-                ;
+
+    if lickFlag == 1
+        hitCounter = hitCounter + 1;
+
+
+        if mod(rewardCounter,10) == 0
+            earnedRewardVol = earnedRewardVol*rewardCompRate;
+        end
+        deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+        earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
+        if mod(rewardCounter,10) == 0
+            earnedRewardVol = earnedRewardVol/rewardCompRate;
+        end
+
+        rewardCounter = rewardCounter + 1;
+
+
+        disp(['Hit: ', num2str(hitCounter), ' / ', num2str(preferredStimCounter)]);
+        disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
+
+        vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
+        trialDigitalTagSession.outputSingleScan(0);
+
+        while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
+            ;
+        end
+
+        rewardedTrial = 1;
+            
+%             if lickTrainDetectionTime < (vblStim + minStimDuration - afterRewardStimTime)
+%                 vblAfterStimGrayTime = Screen('Flip', window, vblStim + (minStimFrames - 0.5) * ifi);  %fliping the screen back to gray after stimFrames
+%             else
+%                 vblAfterStimGrayTime = Screen('Flip', window, lickTrainDetectionTime + (afterRewardStimFrames - 0.5) * ifi);
+%             end
+%             while ((GetSecs - vblStim - relDetectionTime) < (relDetectionTime+afterStimGrayTime)) %waiting until screen turns to white
+%                 ;
+%             end
+            
+    else
+        missedCounter = missedCounter + 1;
+
+
+        disp(['Missed: ', num2str(missedCounter), ' / ', num2str(preferredStimCounter)]);
+        disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
+
+        vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
+
+
+        while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
+            ;
+        end
+
     end
+
     
     disp(' ');
             
