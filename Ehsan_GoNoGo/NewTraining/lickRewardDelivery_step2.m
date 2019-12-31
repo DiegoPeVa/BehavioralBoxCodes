@@ -5,8 +5,8 @@ close all
 Screen('Preference', 'SkipSyncTests', 1);
 
 % Go-NoGo discrimination task, 
-% step1: during go stim presentation whenever the animal licks he gets the
-% reward
+% step2: during go stim presentation whenever the animal licks he gets the
+% reward, trial starts after 2 seconds of no licking
  
      
   
@@ -473,10 +473,20 @@ for trialNo=1:totalTrialNo
     kPsychDontDoRotation, propertiesMat');
 
 
+    while (1)
+        scanStartTime = GetSecs;
+        [lickFlag, relDetectionTime] = detectLickOnRight(noLickDurBeforeStim, spoutSession);
+        if ~lickFlag
+            cuePresTime = scanStartTime + relDetectionTime;
+            break;
+        end
+    end
+
+
     
         
 % this is the preferred stimulus
-   [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, (1 - 0.5) * ifi);
+   [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, cuePresTime + (1 - 0.5) * ifi);
         
 
     initTime = GetSecs();
