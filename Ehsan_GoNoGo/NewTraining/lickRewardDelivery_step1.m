@@ -430,6 +430,8 @@ for trialNo=1:totalTrialNo
     
     currentTrialOrientation = 1; % just showing the go signal
     
+    preferredStimCounter = preferredStimCounter + 1;
+    
     phase = 360*rand;
     allPhases = [allPhases phase];
     propertiesMat = [phase, freq, sigma, contrast, aspectRatio, 0, 0, 0];
@@ -573,6 +575,9 @@ copyfile(string(mfilename('fullpath')) + '.m', dataFolderAdd);
 
 disp(' ');
 
+disp(['Hit: ', num2str(hitCounter), ' / ', num2str(preferredStimCounter)]);
+disp(['Miss: ', num2str(missedCounter), ' / ', num2str(preferredStimCounter)]);
+disp(' ');
 
 disp(['Total Reward: ', num2str(earnedRewardVolTotal)]);
 disp(['Finish Time: ', datestr(sessionEndTime,'HH:MM:SS.FFF')])  
