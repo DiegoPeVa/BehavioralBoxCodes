@@ -4,7 +4,9 @@ close all
   
 Screen('Preference', 'SkipSyncTests', 1);
 
-% Go-NoGo discrimination task, first code 
+% Go-NoGo discrimination task, 
+% step0: whenever animal licks the spuot Go-stim is presented and reward is
+% dlivered
  
      
   
@@ -22,7 +24,7 @@ end
     
 % entering the mouse Numbers, session duration and the session number of 
 % the day  
-prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the trial numbers:'}; 
+prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the reward vol:','Enter the trial numbers:'}; 
 titleBox = 'Input';
 dims = [1 35]; 
 dialogBoxInputs = inputdlg(prompt,titleBox,dims);
@@ -30,7 +32,8 @@ dialogBoxInputs = inputdlg(prompt,titleBox,dims);
 mouseNumber = dialogBoxInputs{1};
 boxNumber = dialogBoxInputs{2};
 sessionNumber = dialogBoxInputs{3};
-totalTrialNo = str2num(dialogBoxInputs{4});
+earnedRewardVol = str2num(dialogBoxInputs{4});
+totalTrialNo = str2num(dialogBoxInputs{5});
  
 
 
@@ -93,7 +96,7 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 % rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
     
 % Reward Volume:
-earnedRewardVol = 6; %in microL
+% earnedRewardVol = 6; %in microL
 freeRewardVol = 4;
 syringeVol = 5;
 
@@ -439,16 +442,6 @@ for trialNo=1:totalTrialNo
     end
     
     
-    if sameOrientation >= maxSameOrientationNo
-        currentTrialOrientation = ~currentTrialOrientation;
-    else
-%         currentTrialOrientation = randi(2) - 1;
-        if rand < goProb
-            currentTrialOrientation = 1;
-        else
-            currentTrialOrientation = 0;
-        end
-    end
     
     while (find(keyCode) == 82)  %Press r to manually give a reward and force a go trial
         
@@ -511,7 +504,7 @@ for trialNo=1:totalTrialNo
 
     rewardCounter = rewardCounter + 1;
     
-    disp(['lick-reward: ', num2str(rewardCounter));
+    disp(['lick-reward: ', num2str(rewardCounter)]);
     disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
     
     Screen('FillRect', window, gray);
@@ -522,6 +515,8 @@ for trialNo=1:totalTrialNo
     while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
                 ;
     end
+    
+    disp(' ');
             
             
 end

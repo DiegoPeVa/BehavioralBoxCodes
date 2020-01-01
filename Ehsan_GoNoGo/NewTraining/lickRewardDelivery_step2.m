@@ -24,7 +24,7 @@ end
     
 % entering the mouse Numbers, session duration and the session number of 
 % the day  
-prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the trial numbers:'}; 
+prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the reward vol:','Enter the stim dur:','Enter the trial numbers:'}; 
 titleBox = 'Input';
 dims = [1 35]; 
 dialogBoxInputs = inputdlg(prompt,titleBox,dims);
@@ -32,7 +32,9 @@ dialogBoxInputs = inputdlg(prompt,titleBox,dims);
 mouseNumber = dialogBoxInputs{1};
 boxNumber = dialogBoxInputs{2};
 sessionNumber = dialogBoxInputs{3};
-totalTrialNo = str2num(dialogBoxInputs{4});
+earnedRewardVol = str2num(dialogBoxInputs{4});
+preferredStimDuration = str2num(dialogBoxInputs{5}); 
+totalTrialNo = str2num(dialogBoxInputs{6});
  
 
 
@@ -95,7 +97,7 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 % rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
     
 % Reward Volume:
-earnedRewardVol = 8; %in microL
+earnedRewardVol = 10; %in microL
 freeRewardVol = 4;
 syringeVol = 5;
 
@@ -345,7 +347,7 @@ righImageHorzPos = [0,0,gaborDimPixWidth,0];
 
 
   
-preferredStimDuration = 4; %in sec
+% preferredStimDuration = 2; %in sec
 preferredStimFrames = round(preferredStimDuration/ifi);
 
 nonPreferredStimDuration = 2;
