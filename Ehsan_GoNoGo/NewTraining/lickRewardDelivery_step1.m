@@ -576,6 +576,9 @@ copyfile(string(mfilename('fullpath')) + '.m', dataFolderAdd);
 
 disp(' ');
 
+disp(['Hit: ', num2str(hitCounter), ' / ', num2str(preferredStimCounter)]);
+disp(['Miss: ', num2str(missedCounter), ' / ', num2str(preferredStimCounter)]);
+disp(' ');
 
 disp(['Hit: ', num2str(hitCounter), ' / ', num2str(preferredStimCounter)]);
 disp(['Miss: ', num2str(missedCounter), ' / ', num2str(preferredStimCounter)]);
