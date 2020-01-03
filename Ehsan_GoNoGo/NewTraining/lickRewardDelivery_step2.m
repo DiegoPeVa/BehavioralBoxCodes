@@ -97,7 +97,7 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 % rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine2,'OutputOnly');
     
 % Reward Volume:
-earnedRewardVol = 10; %in microL
+% earnedRewardVol = 10; %in microL
 freeRewardVol = 4;
 syringeVol = 5;
 
@@ -353,7 +353,7 @@ preferredStimFrames = round(preferredStimDuration/ifi);
 nonPreferredStimDuration = 2;
 nonPreferredStimFrames = round(nonPreferredStimDuration/ifi);
 
-afterStimGrayTime = 6;
+afterStimGrayTime = 4;
 afterStimGrayFrames = round(afterStimGrayTime/ifi);
 
 afterStimExtendedGrayTime = 4;
