@@ -363,7 +363,7 @@ afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
 % afterWrongLickWhiteScreenTime = 6;
 % afterWrongLickStimFrames = round(afterWrongLickWhiteScreenTime/ifi); 
  
-stimRewardDelay = 0; %delay between the stim presentation and sensor monitoring start time
+stimRewardDelay = 0.8; %delay between the stim presentation and sensor monitoring start time
 
 cueStimFixedDelayTime = 0;
 cueStimFixedDelayFrames = round(cueStimFixedDelayTime/ifi);
@@ -423,7 +423,7 @@ previousTrialOrientation = ~currentTrialOrientation;
 goProb = 0.5; 
 noLickDurBeforeStim = 2; % in sec
 
-
+freeRewardFlag = 0;
 
 
 for trialNo=1:totalTrialNo
@@ -460,9 +460,12 @@ for trialNo=1:totalTrialNo
             end 
             
             freeRewardTrial = [freeRewardTrial trialNo];
+            
+            freeRewardFlag = 1; 
     end
     
     phase = 360*rand;
+    phase = 0;
     allPhases = [allPhases phase];
     propertiesMat = [phase, freq, sigma, contrast, aspectRatio, 0, 0, 0];
     
@@ -516,6 +519,11 @@ for trialNo=1:totalTrialNo
             rewardCounter = rewardCounter + 1;    
             
             currentTrialOrientation = 1;
+    end
+    
+    if freeRewardFlag
+        currentTrialOrientation = 1;
+        freeRewardFlag = 0;
     end
 
     if currentTrialOrientation == previousTrialOrientation
