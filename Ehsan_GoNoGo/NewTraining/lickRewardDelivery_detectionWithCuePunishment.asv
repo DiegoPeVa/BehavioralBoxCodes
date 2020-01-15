@@ -306,7 +306,7 @@ tPunishment = 0:1/samplingFreq:punishmentSoundDur;
 
 
 % making the cue sound and the NI-card config for the sound output
-cueSoundDur = 0.2;
+cueSoundDur = 0.05;
 cueSoundDurFrames = round(cueSoundDur/ifi);
 % samplingFreq = 100e3;
 cueSoundFreq = 2400;
@@ -370,6 +370,9 @@ cueStimFixedDelayFrames = round(cueStimFixedDelayTime/ifi);
 
 cueStimJitterDelayTime = 0;
 cueStimJitterDelayFrames = round(cueStimJitterDelayTime/ifi);
+
+brightScreenTime = 0.5;
+brightScreenFrames = round(brightScreenTime/ifi);
 
 % durationToCheckLeverRelease = 2;
 % minimumReleaseDur = 0.2;
@@ -536,7 +539,7 @@ for trialNo=1:totalTrialNo
     stimVector = [stimVector currentTrialOrientation];
                 
 %     sound cue presentation
-%     queueOutputData(soundOutputSession,cueSoundToNICard');
+    queueOutputData(soundOutputSession,cueSoundToNICard');
 
     Screen('FillRect', window, gray);
     Screen('FillRect',window, white, patchRect);
@@ -550,9 +553,15 @@ for trialNo=1:totalTrialNo
         end
     end
         
-%     cuePresTime = GetSecs;
-%     soundOutputSession.startBackground;
-%     wait(soundOutputSession);
+    cuePresTime = GetSecs;
+    soundOutputSession.startBackground;
+    wait(soundOutputSession);
+    
+    
+%             
+%         
+%             soundOutputSession.startBackground;
+
 %     
     
     if cueStimJitterDelayTime
@@ -682,19 +691,19 @@ for trialNo=1:totalTrialNo
 %         end
         
       
-      
+        Screen('FillRect', window, white);
+        
         initTime = GetSecs();
         [lickFlag, relDetectionTime] = detectLickOnRight(nonPreferredStimDuration, spoutSession);
         lickDetectionTime = relDetectionTime + initTime;
         
 
-        Screen('FillRect', window, gray);
-        Screen('FillRect',window, black, patchRect);
+        
         
         
         if lickFlag == 1
             
-            
+             
 %             queueOutputData(soundOutputSession,cueSoundToNICard');
 %         
 %             soundOutputSession.startBackground;
@@ -702,14 +711,21 @@ for trialNo=1:totalTrialNo
             
 %             Screen('FillRect', window, white);
 %             Screen('FillRect',window, photoDiodeGray1, patchRect);
+            vblBrightScreenPunishment = Screen('Flip', window, vblStim + (1 - 0.5) * ifi);
+            trialDigitalTagSession.outputSingleScan(0);
             
             falseAlarmCounter = falseAlarmCounter + 1;
             disp(['False Alarm: ', num2str(falseAlarmCounter), ' / ', num2str(NonPreferredStimCounter)]);
             disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
             
-            vblAfterStimGrayTime = Screen('Flip', window, vblStim + (nonPreferredStimFrames - 0.5) * ifi);
-            trialDigitalTagSession.outputSingleScan(0);
-            wait(soundOutputSession);
+           
+%             wait(soundOutputSession);
+
+            Screen('FillRect', window, gray);
+            Screen('FillRect',window, black, patchRect);
+            
+            vblAfterStimGrayTime = Screen('Flip', window, vblBrightScreenPunishment + (brightScreenFrames - 0.5) * ifi);
+            
             
             while((GetSecs - vblAfterStimGrayTime) < afterStimExtendedGrayTime)
                 ;
@@ -718,7 +734,8 @@ for trialNo=1:totalTrialNo
             
 
         else
-            
+            Screen('FillRect', window, gray);
+            Screen('FillRect',window, black, patchRect);
             
 
             correctRejectionCounter = correctRejectionCounter + 1;

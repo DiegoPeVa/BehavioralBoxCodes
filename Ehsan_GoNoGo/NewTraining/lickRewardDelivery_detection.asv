@@ -354,7 +354,7 @@ nonPreferredStimFrames = round(nonPreferredStimDuration/ifi);
 afterStimGrayTime = 4;
 afterStimGrayFrames = round(afterStimGrayTime/ifi);
 
-afterStimExtendedGrayTime = 4;
+afterStimExtendedGrayTime = 8;
 afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
 
 % afterRewardStimTime = 6;
@@ -539,7 +539,7 @@ for trialNo=1:totalTrialNo
 %     queueOutputData(soundOutputSession,cueSoundToNICard');
 
     Screen('FillRect', window, gray);
-    Screen('FillRect',window, white, patchRect);
+    
     
     while (1)
         scanStartTime = GetSecs;
@@ -568,6 +568,7 @@ for trialNo=1:totalTrialNo
         
         preferredStimCounter = preferredStimCounter + 1;
 % this is the preferred stimulus
+        Screen('FillRect',window, white, patchRect);
         Screen('DrawTextures', window, gabortex, [], righImageHorzPos+stimHeightOffset, orientationPreferred, [], [], [], [],...
             kPsychDontDoRotation, propertiesMat');
 % 
@@ -672,7 +673,6 @@ for trialNo=1:totalTrialNo
 % 
 %         Screen('DrawTextures', window, gabortex, [], righMirrorImageHorzPos+stimHeightOffset, orientationNonPreferred, [], [], [], [],...
 %             kPsychDontDoRotation, propertiesMat');
-        Screen('FillRect',window, black, patchRect);
 
         trialDigitalTagSession.outputSingleScan(1);
         [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, cuePresTime + (1 - 0.5) * ifi);
@@ -695,9 +695,9 @@ for trialNo=1:totalTrialNo
         if lickFlag == 1
             
             
-%             queueOutputData(soundOutputSession,cueSoundToNICard');
-%         
-%             soundOutputSession.startBackground;
+            queueOutputData(soundOutputSession,cueSoundToNICard');
+        
+            soundOutputSession.startBackground;
             
             
 %             Screen('FillRect', window, white);
