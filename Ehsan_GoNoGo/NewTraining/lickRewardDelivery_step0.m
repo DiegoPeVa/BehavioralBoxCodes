@@ -364,7 +364,7 @@ afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
 % afterWrongLickWhiteScreenTime = 6;
 % afterWrongLickStimFrames = round(afterWrongLickWhiteScreenTime/ifi); 
  
-stimRewardDelay = 0.5; %delay between the stim presentation and sensor monitoring start time
+stimRewardDelay = 0.1; %delay between the stim presentation and sensor monitoring start time
 
 cueStimFixedDelayTime = 0;
 cueStimFixedDelayFrames = round(cueStimFixedDelayTime/ifi);
@@ -443,22 +443,22 @@ for trialNo=1:totalTrialNo
     
     
     
-    while (find(keyCode) == 82)  %Press r to manually give a reward and force a go trial
-        
-            [keyIsDown, secs, keyCode, deltaSecs] = KbCheck();
-            
-            if mod(rewardCounter,10) == 0
-                   earnedRewardVol = earnedRewardVol*rewardCompRate;
-            end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
-            earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
-            if mod(rewardCounter,10) == 0
-                earnedRewardVol = earnedRewardVol/rewardCompRate;
-            end
-            
-            rewardCounter = rewardCounter + 1;    
-            
-    end
+%     while (find(keyCode) == 82)  %Press r to manually give a reward and force a go trial
+%         
+%             [keyIsDown, secs, keyCode, deltaSecs] = KbCheck();
+%             
+%             if mod(rewardCounter,10) == 0
+%                    earnedRewardVol = earnedRewardVol*rewardCompRate;
+%             end
+%             deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+%             earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
+%             if mod(rewardCounter,10) == 0
+%                 earnedRewardVol = earnedRewardVol/rewardCompRate;
+%             end
+%             
+%             rewardCounter = rewardCounter + 1;    
+%             
+%     end
 
     stimVector = [stimVector currentTrialOrientation];
                 
@@ -481,6 +481,12 @@ for trialNo=1:totalTrialNo
         [lickFlag, relDetectionTime] = detectLickOnRight(noLickDurBeforeStim, spoutSession);
         if lickFlag
             cuePresTime = scanStartTime + relDetectionTime;
+            break;
+        end
+        
+        [keyIsDown, secs, keyCode, deltaSecs] = KbCheck();
+        if (find(keyCode) == 82)  %Press escape to manually finish the loop
+            cuePresTime = 0;
             break;
         end
     end

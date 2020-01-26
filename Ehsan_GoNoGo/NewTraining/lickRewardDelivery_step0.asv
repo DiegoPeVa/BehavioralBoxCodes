@@ -4,7 +4,9 @@ close all
   
 Screen('Preference', 'SkipSyncTests', 1);
 
-% Go-NoGo discrimination task, first code 
+% Go-NoGo discrimination task, 
+% step0: whenever animal licks the spuot Go-stim is presented and reward is
+% dlivered
  
      
   
@@ -22,7 +24,7 @@ end
     
 % entering the mouse Numbers, session duration and the session number of 
 % the day  
-prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the reward vol:','Enter the trial numbers:','Enter reinforcement trial numbers:'}; 
+prompt = {'Enter the mouse number:','Enter the box number:','Enter the mouse session number:','Enter the reward vol:','Enter the trial numbers:'}; 
 titleBox = 'Input';
 dims = [1 35]; 
 dialogBoxInputs = inputdlg(prompt,titleBox,dims);
@@ -32,7 +34,6 @@ boxNumber = dialogBoxInputs{2};
 sessionNumber = dialogBoxInputs{3};
 earnedRewardVol = str2num(dialogBoxInputs{4});
 totalTrialNo = str2num(dialogBoxInputs{5});
-freeRewardTrials = str2num(dialogBoxInputs{6});
  
 
 
@@ -354,7 +355,7 @@ nonPreferredStimFrames = round(nonPreferredStimDuration/ifi);
 afterStimGrayTime = 4;
 afterStimGrayFrames = round(afterStimGrayTime/ifi);
 
-afterStimExtendedGrayTime = 8;
+afterStimExtendedGrayTime = 4;
 afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
 
 % afterRewardStimTime = 6;
@@ -363,7 +364,7 @@ afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
 % afterWrongLickWhiteScreenTime = 6;
 % afterWrongLickStimFrames = round(afterWrongLickWhiteScreenTime/ifi); 
  
-stimRewardDelay = 0.8; %delay between the stim presentation and sensor monitoring start time
+stimRewardDelay = 0; %delay between the stim presentation and sensor monitoring start time
 
 cueStimFixedDelayTime = 0;
 cueStimFixedDelayFrames = round(cueStimFixedDelayTime/ifi);
@@ -423,63 +424,17 @@ previousTrialOrientation = ~currentTrialOrientation;
 goProb = 0.5; 
 noLickDurBeforeStim = 2; % in sec
 
-freeRewardFlag = 0;
+
 
 
 for trialNo=1:totalTrialNo
     
-    if ~rewardedTrial
-        consecutiveNoRewardCounter = consecutiveNoRewardCounter + 1;
-    else
-        consecutiveNoRewardCounter = 0;
-    end
-%     previousTrialReward = rewardedTrial;
-    rewardedTrial = 0;
-    punishedTrial = 0;
-    
-    if consecutiveNoRewardCounter == consecNoRewardMax
-        
-            if mod(rewardCounter,10) == 0
-                   earnedRewardVol = earnedRewardVol*rewardCompRate;
-            end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
-            earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
-            if mod(rewardCounter,10) == 0
-                earnedRewardVol = earnedRewardVol/rewardCompRate;
-            end
-            freeRewardTime = GetSecs;
-            rewardCounter = rewardCounter + 1;
-            
-             disp(['free reward ']);
-             disp([' ']);
-            
-            consecutiveNoRewardCounter = 0;
-            
-            while((GetSecs - freeRewardTime) < afterfreeRewardWaitTime)
-                ;
-            end 
-            
-            freeRewardTrial = [freeRewardTrial trialNo];
-            
-            freeRewardFlag = 1; 
-    end
+    currentTrialOrientation = 1; % just showing the go signal
     
     phase = 360*rand;
-    phase = 0;
     allPhases = [allPhases phase];
     propertiesMat = [phase, freq, sigma, contrast, aspectRatio, 0, 0, 0];
     
-%     randomFreqVec = (randi(4,1,numberOfIndividualDurs)+3)*1e3;
-%     punishmentSound = zeros(size(tPunishment));
-% 
-%     for freqNo=1:numberOfIndividualDurs
-% 
-%         tIndividualDur = tPunishment(floor(1+(freqNo-1)*samplingFreq*freqChangeDur):floor(freqNo*freqChangeDur*samplingFreq));
-% 
-%         punishmentSound(floor(1+(freqNo-1)*samplingFreq*freqChangeDur):floor(freqNo*freqChangeDur*samplingFreq)) = (square(2*pi*randomFreqVec(freqNo)*tIndividualDur)+1)/2;
-%     end
-%     
-%     punishmentSoundToNICard = punishmentSoundAmp*2*(punishmentSound - 0.5);
     
     [keyIsDown, secs, keyCode, deltaSecs] = KbCheck();
     if (find(keyCode) == 27)  %Press escape to manually finish the loop
@@ -487,279 +442,94 @@ for trialNo=1:totalTrialNo
     end
     
     
-%     Screen('FillRect', window, gray);
-%     Screen('FillRect',window, black, patchRect);
-%     Screen('Flip', window);
     
-    % trial orientation
-    if sameOrientation >= maxSameOrientationNo
-        currentTrialOrientation = ~currentTrialOrientation;
-    else
-%         currentTrialOrientation = randi(2) - 1;
-        if rand < goProb
-            currentTrialOrientation = 1;
-        else
-            currentTrialOrientation = 0;
-        end
-    end
-    
-    while (find(keyCode) == 82)  %Press r to manually give a reward and force a go trial
-        
-            [keyIsDown, secs, keyCode, deltaSecs] = KbCheck();
-            
-            if mod(rewardCounter,10) == 0
-                   earnedRewardVol = earnedRewardVol*rewardCompRate;
-            end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
-            earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
-            if mod(rewardCounter,10) == 0
-                earnedRewardVol = earnedRewardVol/rewardCompRate;
-            end
-            
-            rewardCounter = rewardCounter + 1;    
-            
-            currentTrialOrientation = 1;
-    end
-    
-    if freeRewardFlag
-        currentTrialOrientation = 1;
-        freeRewardFlag = 0;
-    end
+%     while (find(keyCode) == 82)  %Press r to manually give a reward and force a go trial
+%         
+%             [keyIsDown, secs, keyCode, deltaSecs] = KbCheck();
+%             
+%             if mod(rewardCounter,10) == 0
+%                    earnedRewardVol = earnedRewardVol*rewardCompRate;
+%             end
+%             deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+%             earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
+%             if mod(rewardCounter,10) == 0
+%                 earnedRewardVol = earnedRewardVol/rewardCompRate;
+%             end
+%             
+%             rewardCounter = rewardCounter + 1;    
+%             
+%     end
 
-    if currentTrialOrientation == previousTrialOrientation
-        sameOrientation = sameOrientation + 1;
-    else
-        sameOrientation = 1;
-    end
-    
-    previousTrialOrientation = currentTrialOrientation;
     stimVector = [stimVector currentTrialOrientation];
                 
 %     sound cue presentation
 %     queueOutputData(soundOutputSession,cueSoundToNICard');
 
     Screen('FillRect', window, gray);
+    Screen('FillRect',window, white, patchRect);
     
+    Screen('DrawTextures', window, gabortex, [], righImageHorzPos+stimHeightOffset, orientationPreferred, [], [], [], [],...
+    kPsychDontDoRotation, propertiesMat');
+% 
+%         Screen('DrawTextures', window, gabortex, [], righMirrorImageHorzPos+stimHeightOffset, orientationPreferred, [], [], [], [],...
+%             kPsychDontDoRotation, propertiesMat');
+    trialDigitalTagSession.outputSingleScan(1);
+
     
-    while (1)
+    while (1) % detect the lick and go for the stim pres and reward delivery
         scanStartTime = GetSecs;
         [lickFlag, relDetectionTime] = detectLickOnRight(noLickDurBeforeStim, spoutSession);
-        if ~lickFlag
+        if lickFlag
             cuePresTime = scanStartTime + relDetectionTime;
+            break;
+        end
+        
+        [keyIsDown, secs, keyCode, deltaSecs] = KbCheck();
+        if (find(keyCode) == 82)  %Press escape to manually finish the loop
             break;
         end
     end
         
-%     cuePresTime = GetSecs;
-%     soundOutputSession.startBackground;
-%     wait(soundOutputSession);
-%     
-    
-    if cueStimJitterDelayTime
-        totalCueStimDelayFrames = cueStimFixedDelayFrames + randi(cueStimJitterDelayFrames);
-    else
-        totalCueStimDelayFrames = cueStimFixedDelayFrames;
-    end
-    
-    
-
-
-    if currentTrialOrientation
-        
-        preferredStimCounter = preferredStimCounter + 1;
 % this is the preferred stimulus
-        Screen('FillRect',window, white, patchRect);
-        Screen('DrawTextures', window, gabortex, [], righImageHorzPos+stimHeightOffset, orientationPreferred, [], [], [], [],...
-            kPsychDontDoRotation, propertiesMat');
-% 
-%         Screen('DrawTextures', window, gabortex, [], righMirrorImageHorzPos+stimHeightOffset, orientationPreferred, [], [], [], [],...
-%             kPsychDontDoRotation, propertiesMat');
-        trialDigitalTagSession.outputSingleScan(1);
-        [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, cuePresTime + (1 - 0.5) * ifi);
+   [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, cuePresTime + (1 - 0.5) * ifi);
         
-        if trialNo < freeRewardTrials
-            while((GetSecs()-vblStim)<stimRewardDelay)
+
+    while((GetSecs()-vblStim)<stimRewardDelay)
+        ;
+    end
+
+    if mod(rewardCounter,10) == 0
+        earnedRewardVol = earnedRewardVol*rewardCompRate;
+    end
+    deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+    earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
+    if mod(rewardCounter,10) == 0
+        earnedRewardVol = earnedRewardVol/rewardCompRate;
+    end
+
+    rewardCounter = rewardCounter + 1;
+    
+    disp(['lick-reward: ', num2str(rewardCounter)]);
+    disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
+    
+    Screen('FillRect', window, gray);
+    Screen('FillRect',window, black, patchRect);
+    
+    vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
+    
+    while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
                 ;
-            end
-
-            if mod(rewardCounter,10) == 0
-                earnedRewardVol = earnedRewardVol*rewardCompRate;
-            end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
-            earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
-            if mod(rewardCounter,10) == 0
-                earnedRewardVol = earnedRewardVol/rewardCompRate;
-            end
-
-            rewardCounter = rewardCounter + 1;
-            
-            rewardedTrial = 1;
-            
-        end
-        
-        
-        
-        
-        initTime = GetSecs();
-        [lickFlag, relDetectionTime] = detectLickOnRight(preferredStimDuration, spoutSession);
-        lickDetectionTime = relDetectionTime + initTime;
-        
-
-        
-        Screen('FillRect', window, gray);
-        Screen('FillRect',window, black, patchRect);
-        
-        if lickFlag == 1
-            hitCounter = hitCounter + 1;
-            
-            if trialNo > freeRewardTrials
-                if mod(rewardCounter,10) == 0
-                    earnedRewardVol = earnedRewardVol*rewardCompRate;
-                end
-                deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
-                earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
-                if mod(rewardCounter,10) == 0
-                    earnedRewardVol = earnedRewardVol/rewardCompRate;
-                end
-            
-                rewardCounter = rewardCounter + 1;
-            end
-             
-            disp(['Hit: ', num2str(hitCounter), ' / ', num2str(preferredStimCounter)]);
-            disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
-            
-            vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
-            trialDigitalTagSession.outputSingleScan(0);
-            
-            while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
-                ;
-            end
-            
-            rewardedTrial = 1;
-            
-%             if lickTrainDetectionTime < (vblStim + minStimDuration - afterRewardStimTime)
-%                 vblAfterStimGrayTime = Screen('Flip', window, vblStim + (minStimFrames - 0.5) * ifi);  %fliping the screen back to gray after stimFrames
-%             else
-%                 vblAfterStimGrayTime = Screen('Flip', window, lickTrainDetectionTime + (afterRewardStimFrames - 0.5) * ifi);
-%             end
-%             while ((GetSecs - vblStim - relDetectionTime) < (relDetectionTime+afterStimGrayTime)) %waiting until screen turns to white
-%                 ;
-%             end
-            
-        else
-            missedCounter = missedCounter + 1;
-            
-            
-            disp(['Missed: ', num2str(missedCounter), ' / ', num2str(preferredStimCounter)]);
-            disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
-            
-            vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
-            trialDigitalTagSession.outputSingleScan(0);
-            
-            while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
-                ;
-            end
-
-        end
-        
-        
-    else
-        
-        NonPreferredStimCounter = NonPreferredStimCounter + 1;
-        
-        % this is the non preferred orientation
-%         Screen('DrawTextures', window, gabortex, [], righImageHorzPos+stimHeightOffset, orientationNonPreferred, [], [], [], [],...
-%             kPsychDontDoRotation, propertiesMat');
-% 
-%         Screen('DrawTextures', window, gabortex, [], righMirrorImageHorzPos+stimHeightOffset, orientationNonPreferred, [], [], [], [],...
-%             kPsychDontDoRotation, propertiesMat');
-
-        trialDigitalTagSession.outputSingleScan(1);
-        [vblStim StimulusOnsetTime FlipTimestampStim MissedStim BeamposStim] = Screen('Flip', window, cuePresTime + (1 - 0.5) * ifi);
-        
-%         while((GetSecs()-vblStim)<stimRewardDelay)  %delay between stim start and reward deliver
-%              ;
-%         end
-        
-      
-      
-        initTime = GetSecs();
-        [lickFlag, relDetectionTime] = detectLickOnRight(nonPreferredStimDuration, spoutSession);
-        lickDetectionTime = relDetectionTime + initTime;
-        
-
-        Screen('FillRect', window, gray);
-        Screen('FillRect',window, black, patchRect);
-        
-        
-        if lickFlag == 1
-            
-            
-            queueOutputData(soundOutputSession,cueSoundToNICard');
-        
-            soundOutputSession.startBackground;
-            
-            
-%             Screen('FillRect', window, white);
-%             Screen('FillRect',window, photoDiodeGray1, patchRect);
-            
-            falseAlarmCounter = falseAlarmCounter + 1;
-            disp(['False Alarm: ', num2str(falseAlarmCounter), ' / ', num2str(NonPreferredStimCounter)]);
-            disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
-            
-            vblAfterStimGrayTime = Screen('Flip', window, vblStim + (nonPreferredStimFrames - 0.5) * ifi);
-            trialDigitalTagSession.outputSingleScan(0);
-            wait(soundOutputSession);
-            
-            while((GetSecs - vblAfterStimGrayTime) < afterStimExtendedGrayTime)
-                ;
-            end 
-            
-            
-
-        else
-            
-            
-
-            correctRejectionCounter = correctRejectionCounter + 1;
-            disp(['Correct Rejection: ', num2str(correctRejectionCounter), ' / ', num2str(NonPreferredStimCounter)]);
-            disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
-            
-            vblAfterStimGrayTime = Screen('Flip', window, vblStim + (nonPreferredStimFrames - 0.5) * ifi);
-            trialDigitalTagSession.outputSingleScan(0);
-            while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
-                ;
-            end
-
-        end
-        
     end
     
     disp(' ');
-    
-    
-    stimPresTime = [stimPresTime vblStim];
-
- 
-%     while((GetSecs - vblAfterStimGrayTime) < afterStimGrayTime)
-%         ;
-%     end
-    
-    
+            
+            
+end
         
-end 
+   
 
 sessionEndTime = now;
 
-% Screen('FillRect', window, gray);  
-% Screen('FillRect',window, black, patchRect);
-% Screen('Flip', window);
-
-
-% notification to the experimenter to enable trigger in camera setting to stop frame recording 
-% if cameraRecordingEnable
-%     cameraTriggerEnableDialogMirrorScreens;
-% end
 
 
 %Stop the recording
@@ -784,12 +554,7 @@ copyfile(string(mfilename('fullpath')) + '.m', dataFolderAdd);
 
 disp(' ');
 
-disp(['Hit: ', num2str(hitCounter), ' / ', num2str(preferredStimCounter)]);
-disp(['Miss: ', num2str(missedCounter), ' / ', num2str(preferredStimCounter)]);
-disp(' ');
-disp(['Correct Rejection: ', num2str(correctRejectionCounter), ' / ', num2str(NonPreferredStimCounter)]);
-disp(['False Alarm: ', num2str(falseAlarmCounter), ' / ', num2str(NonPreferredStimCounter)]);
-disp(' ');
+
 disp(['Total Reward: ', num2str(earnedRewardVolTotal)]);
 disp(['Finish Time: ', datestr(sessionEndTime,'HH:MM:SS.FFF')])  
 %reading the recorded data
