@@ -1,4 +1,4 @@
-function [totalSteps,exactRewardValue] = deliverReward (volume_uL, syringeSize_mL, niCardSession)
+function [totalSteps,exactRewardValue] = deliverReward (volume_uL, syringeSize_mL, niCardSession, enableSession)
 
 % We will use this function to deliver the reward by controling the step motor via the NI-card
 % volume_uL: amount of reward to be delivered in micro liters,
@@ -15,7 +15,7 @@ function [totalSteps,exactRewardValue] = deliverReward (volume_uL, syringeSize_m
 % velocity of the motor which we don't have any reliable way to measure and since it happens at the end of each trial, we decided that we don't need the exact end time of reward)
 % 
 
-
+enableSession.outputSingleScan(0);
 
 
 
@@ -92,5 +92,6 @@ for loop=1:totalSteps
     
 end
 
+enableSession.outputSingleScan(1);
 
 end
