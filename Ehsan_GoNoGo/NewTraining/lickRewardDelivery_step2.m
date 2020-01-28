@@ -353,12 +353,12 @@ preferredStimFrames = round(preferredStimDuration/ifi);
 nonPreferredStimDuration = 2;
 nonPreferredStimFrames = round(nonPreferredStimDuration/ifi);
 
-afterStimGrayTime = 12;
+afterStimGrayTime = 6;
 afterStimGrayFrames = round(afterStimGrayTime/ifi);
 
-afterStimGrayJitter = 3;
+afterStimGrayJitter = 4;
 
-afterStimGrayTimeMiss = 4;
+afterStimGrayTimeMiss = 6;
 
 afterStimExtendedGrayTime = 4;
 afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
@@ -526,8 +526,10 @@ for trialNo=1:totalTrialNo
 
         vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
         trialDigitalTagSession.outputSingleScan(0);
+        
+        waitTime = afterStimGrayTime + afterStimGrayJitter*rand;
 
-        while((GetSecs - vblAfterStimGrayTime) < (afterStimGrayTime + afterStimGrayJitter*rand))
+        while((GetSecs - vblAfterStimGrayTime) < waitTime)
             ;
         end
 
@@ -550,6 +552,8 @@ for trialNo=1:totalTrialNo
         disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
 
         vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
+        
+        waitTime = afterStimGrayTime + afterStimGrayJitter*rand;
 
 
         while((GetSecs - vblAfterStimGrayTime) < (afterStimGrayTimeMiss))

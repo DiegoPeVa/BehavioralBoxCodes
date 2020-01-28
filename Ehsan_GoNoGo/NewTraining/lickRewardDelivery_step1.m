@@ -513,8 +513,10 @@ for trialNo=1:totalTrialNo
 
         vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
         trialDigitalTagSession.outputSingleScan(0);
+        
+        waitTime = afterStimGrayTime + afterStimGrayJitterTime*rand;
 
-        while((GetSecs - vblAfterStimGrayTime) < (afterStimGrayTime + afterStimGrayJitterTime*rand))
+        while((GetSecs - vblAfterStimGrayTime) < waitTime)
             ;
         end
 
@@ -537,9 +539,11 @@ for trialNo=1:totalTrialNo
         disp(['passed time: ',num2str(floor((GetSecs()-startRecTime)/60)), ' Minuets']);
 
         vblAfterStimGrayTime = Screen('Flip', window, vblStim + (preferredStimFrames - 0.5) * ifi);
+        
+        waitTime = afterStimGrayTime + afterStimGrayJitterTime*rand;
 
 
-        while((GetSecs - vblAfterStimGrayTime) < (afterStimGrayTime + afterStimGrayJitterTime*rand))
+        while((GetSecs - vblAfterStimGrayTime) < waitTime)
             ;
         end
 
