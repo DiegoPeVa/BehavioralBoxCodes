@@ -92,7 +92,6 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 
 rewardStepMotorEnable = daq.createSession('ni');
 motorEnablePortLine = 'port0/line5';
-%1 - output to step motor to control the reward
 rewardStepMotorEnable.addDigitalChannel(niDevName,motorEnablePortLine,'OutputOnly');
 rewardStepMotorEnable.outputSingleScan(1);
 
@@ -464,7 +463,7 @@ for trialNo=1:totalTrialNo
             if mod(rewardCounter,10) == 0
                    earnedRewardVol = earnedRewardVol*rewardCompRate;
             end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
             earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
             if mod(rewardCounter,10) == 0
                 earnedRewardVol = earnedRewardVol/rewardCompRate;
@@ -518,7 +517,7 @@ for trialNo=1:totalTrialNo
         if mod(rewardCounter,10) == 0
             earnedRewardVol = earnedRewardVol*rewardCompRate;
         end
-        deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+        deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
         earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
         if mod(rewardCounter,10) == 0
             earnedRewardVol = earnedRewardVol/rewardCompRate;

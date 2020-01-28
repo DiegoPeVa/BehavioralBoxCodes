@@ -88,6 +88,11 @@ rewardPortLine1 = 'port0/line0';
 %1 - output to step motor to control the reward
 rewardStepMotorCtl1.addDigitalChannel(niDevName,rewardPortLine1,'OutputOnly');
 
+rewardStepMotorEnable = daq.createSession('ni');
+motorEnablePortLine = 'port0/line5';
+rewardStepMotorEnable.addDigitalChannel(niDevName,motorEnablePortLine,'OutputOnly');
+rewardStepMotorEnable.outputSingleScan(1);
+
 % %Digital Output session for left reward control
 % rewardStepMotorCtl1 = daq.createSession('ni');
 % rewardPortLine2 = 'port0/line4';
@@ -322,7 +327,7 @@ addAnalogOutputChannel(soundOutputSession,niDevName,0,'Voltage');
 soundOutputSession.Rate = samplingFreq;
 %--------------------------------------------------------------------------
 
-deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
 % deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
 
 % Stimulus Parameters
@@ -445,7 +450,7 @@ for trialNo=1:totalTrialNo
             if mod(rewardCounter,10) == 0
                    earnedRewardVol = earnedRewardVol*rewardCompRate;
             end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
             earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
             if mod(rewardCounter,10) == 0
                 earnedRewardVol = earnedRewardVol/rewardCompRate;
@@ -513,7 +518,7 @@ for trialNo=1:totalTrialNo
             if mod(rewardCounter,10) == 0
                    earnedRewardVol = earnedRewardVol*rewardCompRate;
             end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
             earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
             if mod(rewardCounter,10) == 0
                 earnedRewardVol = earnedRewardVol/rewardCompRate;
@@ -593,7 +598,7 @@ for trialNo=1:totalTrialNo
             if mod(rewardCounter,10) == 0
                 earnedRewardVol = earnedRewardVol*rewardCompRate;
             end
-            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+            deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
             earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
             if mod(rewardCounter,10) == 0
                 earnedRewardVol = earnedRewardVol/rewardCompRate;
@@ -624,7 +629,7 @@ for trialNo=1:totalTrialNo
                 if mod(rewardCounter,10) == 0
                     earnedRewardVol = earnedRewardVol*rewardCompRate;
                 end
-                deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1);
+                deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
                 earnedRewardVolTotal = earnedRewardVolTotal + earnedRewardVol;
                 if mod(rewardCounter,10) == 0
                     earnedRewardVol = earnedRewardVol/rewardCompRate;
