@@ -15,11 +15,11 @@ soundOutputSession = daq.createSession('ni');
 addAnalogOutputChannel(soundOutputSession,niDevName,0,'Voltage');
 soundOutputSession.Rate = samplingFreq;
 
-cueSoundDur = 0.3;
+cueSoundDur = 0.2;
 % cueSoundDurFrames = round(cueSoundDur/ifi);
 % samplingFreq = 100e3;
-cueSoundFreq = 1000;
-cueSoundAmp = 0.2;
+cueSoundFreq = 2400;
+cueSoundAmp = 0.1;
       
 tCue = 0:1/samplingFreq:cueSoundDur;
 cueSoundToNICard = cueSoundAmp*sin(2*pi*cueSoundFreq*tCue);

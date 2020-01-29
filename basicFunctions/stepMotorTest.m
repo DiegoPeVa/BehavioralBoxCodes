@@ -17,7 +17,7 @@ rewardStepMotorEnable.addDigitalChannel(niDevName,motorEnablePortLine,'OutputOnl
 rewardStepMotorEnable.outputSingleScan(1);
 
 rewardVol = 4; 
-deliverReward(earnedRewardVol,syringeVol,rewardStepMotorCtl1,rewardStepMotorEnable);
+deliverReward(rewardVol,5,rewardStepMotorCtl1,rewardStepMotorEnable);
 % deliverReward(rewardVol,5,rewardStepMotorCtl2);
 % 
 % for i=1:20

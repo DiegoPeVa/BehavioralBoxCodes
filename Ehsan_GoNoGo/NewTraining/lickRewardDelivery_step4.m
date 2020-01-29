@@ -4,8 +4,7 @@ close all
   
 Screen('Preference', 'SkipSyncTests', 1);
 
-% Go-NoGo discrimination task, first two trials always go, after two
-% consecutive misses all trials are go until animal does a hit!
+% Go-NoGo discrimination task, first code 
  
      
   
@@ -440,7 +439,7 @@ for trialNo=1:totalTrialNo
         consecutiveNoRewardCounter = 0;
     end
 %     previousTrialReward = rewardedTrial;
-    
+    rewardedTrial = 0;
     punishedTrial = 0;
     
     if consecutiveNoRewardCounter == consecNoRewardMax
@@ -499,11 +498,7 @@ for trialNo=1:totalTrialNo
     
     % trial orientation
     if sameOrientation >= maxSameOrientationNo
-        if (~rewardedTrial && (previousTrialOrientation == 1))
-            currentTrialOrientation = 1;
-        else 
-            currentTrialOrientation = ~currentTrialOrientation;
-        end
+        currentTrialOrientation = ~currentTrialOrientation;
     else
 %         currentTrialOrientation = randi(2) - 1;
         if rand < goProb
@@ -512,8 +507,6 @@ for trialNo=1:totalTrialNo
             currentTrialOrientation = 0;
         end
     end
-    
-    rewardedTrial = 0;
     
     while (find(keyCode) == 82)  %Press r to manually give a reward and force a go trial
         
@@ -536,10 +529,6 @@ for trialNo=1:totalTrialNo
     if freeRewardFlag
         currentTrialOrientation = 1;
         freeRewardFlag = 0;
-    end
-    
-    if trialNo < 2
-        currentTrialOrientation = 1;
     end
 
     if currentTrialOrientation == previousTrialOrientation
@@ -713,8 +702,6 @@ for trialNo=1:totalTrialNo
             queueOutputData(soundOutputSession,cueSoundToNICard');
         
             soundOutputSession.startBackground;
-            
-            wait(soundOutputSession);
             
             
 %             Screen('FillRect', window, white);

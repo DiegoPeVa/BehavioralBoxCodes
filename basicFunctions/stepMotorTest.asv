@@ -11,9 +11,13 @@ rewardStepMotorCtl1.addDigitalChannel(niDevName,niPortLine1,'OutputOnly');
 % 
 % rewardStepMotorCtl2 = daq.createSession('ni');
 % rewardStepMotorCtl2.addDigitalChannel(niDevName,niPortLine2,'OutputOnly');
+rewardStepMotorEnable = daq.createSession('ni');
+motorEnablePortLine = 'port0/line5';
+rewardStepMotorEnable.addDigitalChannel(niDevName,motorEnablePortLine,'OutputOnly');
+rewardStepMotorEnable.outputSingleScan(1);
 
 rewardVol = 4; 
-deliverReward(rewardVol,5,rewardStepMotorCtl1);
+deliverReward(rewardVol,5,rewardStepMotorCtl1,rewardStepMotorEnable);
 % deliverReward(rewardVol,5,rewardStepMotorCtl2);
 % 
 % for i=1:20
