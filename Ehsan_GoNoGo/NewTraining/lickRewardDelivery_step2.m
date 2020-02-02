@@ -358,12 +358,12 @@ preferredStimFrames = round(preferredStimDuration/ifi);
 nonPreferredStimDuration = 2;
 nonPreferredStimFrames = round(nonPreferredStimDuration/ifi);
 
-afterStimGrayTime = 6;
+afterStimGrayTime = 1;
 afterStimGrayFrames = round(afterStimGrayTime/ifi);
 
-afterStimGrayJitter = 4;
+afterStimGrayJitter = 1;
 
-afterStimGrayTimeMiss = 6;
+afterStimGrayTimeMiss = 1;
 
 afterStimExtendedGrayTime = 4;
 afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
@@ -432,7 +432,7 @@ currentTrialOrientation = randi(2) - 1; % 1 is the preferred/rewarded Stim and 0
 previousTrialOrientation = ~currentTrialOrientation;
 
 goProb = 0.5; 
-noLickDurBeforeStim = 2; % in sec
+noLickDurBeforeStim = 4; % in sec
 
 
 
