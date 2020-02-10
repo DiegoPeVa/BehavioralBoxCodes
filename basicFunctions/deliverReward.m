@@ -76,7 +76,7 @@ exactRewardValue = totalSteps*volPerRevolution_uL/800;
 
 niCardSession.outputSingleScan(0)
 
-waitBetweenPulses = 0.01;
+waitBetweenPulses = 0.001;
 
 for loop=1:totalSteps
     

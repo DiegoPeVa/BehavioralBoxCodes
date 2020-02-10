@@ -360,7 +360,7 @@ nonPreferredStimFrames = round(nonPreferredStimDuration/ifi);
 afterStimGrayTime = 4;
 afterStimGrayFrames = round(afterStimGrayTime/ifi);
 
-afterStimExtendedGrayTime = 4;
+afterStimExtendedGrayTime = 8;
 afterStimExtendedGrayFrames = round(afterStimExtendedGrayTime/ifi);
 
 % afterRewardStimTime = 6;
